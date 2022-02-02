@@ -15,4 +15,11 @@ variables:
 steps:
 - script: dotnet build --configuration $(buildConfiguration) 
   displayName: 'dotnet build $(buildConfiguration)'
+- task: DownloadSecureFile@1
+  name: authkey
+  displayName: 'Download Service Account Key'
+  inputs:
+    secureFile: 'service-account-key.json'
+    retryCount: '2'
+- script: gcloud auth activate-service-account --key-file $(authkey.secureFilePath)
 - script: gsutil cp file1.md gs://my_azure_bucket
